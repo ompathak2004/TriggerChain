@@ -1,13 +1,20 @@
 import { ReactNode } from "react"
 
-export const PrimaryButton =({children , onclick , size} : {
-    children : ReactNode
-    onclick :()=> void,
-    size : "big" | "small"
-})=>{
+export const PrimaryButton = ({children, onClick, size = "small",}: {
+  children: ReactNode;
+  onClick: () => void;
+  size?: "big" | "small";
+}) => {
 
-    return <div className=""
-    onClick={onclick}>
-        {children}
-    </div>
+    return (
+        <div
+          onClick={onClick}
+          className={`${
+            size === "small" ? "text-sm px-8 py-2" : "text-xl px-14 py-3"
+          } 
+        cursor-pointer hover:shadow-md bg-amber-600 text-white rounded-full text-center flex justify-center flex-col`}
+        >
+          {children}
+        </div>
+    )
 }
