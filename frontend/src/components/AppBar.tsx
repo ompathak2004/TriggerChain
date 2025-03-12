@@ -1,7 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation"
-import { LinkButtons } from "./buttons/LinkButtons"
-// import { LinkButtons } from "./buttons/LinkButtons"
+import { LinkButton } from "./buttons/LinkButton"
 
 import { PrimaryButton } from "./buttons/PrimaryButton";
 import { DarkButton } from "./buttons/DarkButton";
@@ -14,12 +13,12 @@ export const Appbar = () => {
         </div>
         <div className="flex">
             <div className="pr-4">
-                <LinkButtons onClick={() => {}}>Contact Sales</LinkButtons>
+                <LinkButton onClick={() => {}}>Contact Sales</LinkButton>
             </div>
             <div className="pr-4">
-                <LinkButtons onClick={() => {
+                <LinkButton onClick={() => {
                     router.push("/login")
-                }}>Login</LinkButtons>
+                }}>Login</LinkButton>
             </div>
             <PrimaryButton onClick={() => {
                 router.push("/signup")
