@@ -31,7 +31,7 @@ export const Hero = () => {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                 >
-                    AI gives you automation superpowers, and Zapier puts them to work. Pairing AI and Zapier helps you turn ideas into workflows and bots that work for you.
+                    AI gives you automation superpowers, and TriggerChain puts them to work. Pairing AI and TriggerChain helps you turn ideas into workflows and bots that work for you.
                 </motion.div>
             </div>
 
