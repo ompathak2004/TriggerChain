@@ -15,7 +15,7 @@ export async function sendEmail(to: string, body: string) {
         from: "example@gmail.com",
         sender: "example@gmail.com",
         to,
-        subject: "Hello from Zapier",
+        subject: "Hello from TriggerChain",
         text: body
     })
 }

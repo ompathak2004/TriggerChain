@@ -33,7 +33,7 @@ export const Appbar = () => {
 
     return <div className="flex border-b justify-between p-4">
         <div className="flex flex-col justify-center text-2xl font-extrabold">
-            Zapier
+            TriggerChain
         </div>
         <div className="flex">
             {!loading && (
