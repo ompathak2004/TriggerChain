@@ -7,7 +7,10 @@ import { prismaclient } from "../db";
 const router = Router();
 
 router.post("/", authmiddleware, async (req, res) => {
-    const id = req.id;
+    const id = req.id as number;
+    if (!id) {
+        return res.status(400).json({ message: "User ID is required" });
+    }
     const body = req.body;
     const parsedData = ZapCreateSchema.safeParse(body);
     
