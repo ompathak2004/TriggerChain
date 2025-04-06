@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { BACKEND_URL, HOOKS_URL } from "../config";
 import { LinkButton } from "@/components/buttons/LinkButton";
 import { useRouter } from "next/navigation";
+import { off } from "process";
 
 interface Zap {
     "id": string,
@@ -33,6 +34,48 @@ interface Zap {
         }
     }
 }
+function useAuth() {
+    const router = useRouter();
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [authChecking, setAuthChecking] = useState(true);
+
+    useEffect(() => {
+        const checkAuth = async () => {
+            try {
+                const token = localStorage.getItem("token");
+                if (!token) {
+                    setIsAuthenticated(false);
+                    setAuthChecking(false);
+                    router.push("/login");
+                    return;
+                }
+                const response = await axios.get(`${BACKEND_URL}/api/v1/user`,{
+                    headers:{
+                        "Authorization" :token
+                    }
+                })
+
+                if(response.data.user){
+                    setIsAuthenticated(true);
+                }else{
+                    localStorage.removeItem("token");
+                    router.push("/login");
+                }
+            }catch(e){
+                console.error("Auth check failed:", e);
+                localStorage.removeItem("token");
+                router.push("/login");
+            }finally{
+                setAuthChecking(false);
+            }
+        }
+        checkAuth();
+    }, [router])
+    return {
+        isAuthenticated,
+        authChecking
+    }
+}
 
 function useZaps() {
     const [loading, setLoading] = useState(true);
@@ -55,10 +98,21 @@ function useZaps() {
     }
 }
 
-export default function() {
+export default function () {
     const { loading, zaps } = useZaps();
     const router = useRouter();
+    const {authChecking, isAuthenticated} = useAuth();
     
+    if(authChecking){
+        return<div>
+            loading...
+        </div>
+    }
+
+    if(!isAuthenticated){
+        return null;
+    }
+
     return <div>
         <Appbar />
         <div className="flex justify-center pt-8">
@@ -77,16 +131,16 @@ export default function() {
     </div>
 }
 
-function ZapTable({ zaps }: {zaps: Zap[]}) {
+function ZapTable({ zaps }: { zaps: Zap[] }) {
     const router = useRouter();
 
     return <div className="p-8 max-w-screen-lg w-full">
         <div className="flex">
-                <div className="flex-1">Name</div>
-                <div className="flex-1">ID</div>
-                <div className="flex-1">Created at</div>
-                <div className="flex-1">Webhook URL</div>
-                <div className="flex-1">Go</div>
+            <div className="flex-1">Name</div>
+            <div className="flex-1">ID</div>
+            <div className="flex-1">Created at</div>
+            <div className="flex-1">Webhook URL</div>
+            <div className="flex-1">Go</div>
         </div>
         {zaps.map(z => <div className="flex border-b border-t py-4">
             <div className="flex-1 flex"><img src={z.trigger.type.image} className="w-[30px] h-[30px]" /> {z.actions.map(x => <img src={x.type.image} className="w-[30px] h-[30px]" />)}</div>
@@ -94,8 +148,8 @@ function ZapTable({ zaps }: {zaps: Zap[]}) {
             <div className="flex-1">Nov 13, 2023</div>
             <div className="flex-1">{`${HOOKS_URL}/hooks/catch/1/${z.id}`}</div>
             <div className="flex-1"><LinkButton onClick={() => {
-                    router.push("/zap/" + z.id)
-                }}>Go</LinkButton></div>
+                router.push("/zap/" + z.id)
+            }}>Go</LinkButton></div>
         </div>)}
     </div>
 }
